@@ -59,27 +59,17 @@ exports.create = (req, res) => {
  * Find all Users
  */
 exports.findAll = (req, res) => {
-
+     var filter={};
     if(req.query.role){
-      return User.find({role:req.query.role}).then(data => {
-        res.status(200).json(data);
-    }).catch(err => {
-        console.log(err.message);
-        res.status(500).json({ message: err.error || "Some error occurred while retrieving users." });
-    });
-    }
+        filter.role=req.query.role;
+       }
 
     if(req.query.gender){
-        return User.find({gender:req.query.gender}).then(data => {
-          res.status(200).json(data);
-      }).catch(err => {
-        console.log(err.message);
-          res.status(500).json({ message: err.error || "Some error occurred while retrieving users." });
-      });
+        filter.gender=req.query.gender;
       }
 
 
-    User.find().then(data => {
+    User.find(filter).then(data => {
         res.status(200).json(data);
     }).catch(err => {
         console.log(err.message);
@@ -112,8 +102,8 @@ exports.findOne = (req, res) => {
  * Delete a user with the specified id in the request
  */
  exports.delete=(req,res)=>{
-    
-    User.findOneAndRemove(req.params.id).then(data => {
+  
+    User.findByIdAndDelete(req.params.id).then(data => {
         if (!data) {
             return res.status(404).json({ message: `User not found with id  ${req.params.id}` });
         }
